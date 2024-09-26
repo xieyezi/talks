@@ -1002,7 +1002,7 @@ glow: left
   bg-hex-5552 p8 border="l main" transition duration-500
   :class="$clicks >= 1 ? '' : 'translate-x-100%'"
 >
-<div scale-90 origin-left-top w-160 mb--100 mr--40>
+<div origin-left-top w-160 mb--100 mr--40>
 
 # 导入
 
@@ -1018,32 +1018,62 @@ yarn add @pietra-auto-tracker
 <div mt-2 />
 
 ```js
+import { pietraAutoTracker } from '@pietra/auto-tracker';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     ...
     react(),
-    pietraAutoImport({
-      include: [/\.[tj]sx?$/],
-      dts: './pietra-auto-imports.d.ts',
-      eslintrc: './.eslintrc-pietra-auto-import.json',
-      presets: {
-        react: true,
-        lodash: true,
-        classnames: true,
-        reactRouter: false,
-        reactRouterDom: false,
-        pietraCompoent: false,
-        pietraIcons: true,
-        antd: { prefix: 'Antd' },
-      },
-    }),
+    pietraAutoTracker(),
   ],
   ...
 });
 ```
 </div>
 </div>
+
+---
+
+# 使用
+
+```tsx
+...
+<div className='auto-tracker-container'>
+  <AntdSpace>
+    <AntdButton
+      data-log-common-type='AST_BUTTON'
+      data-log-common-content='not have onClick'
+      data-log-field1='filed1'
+      data-log-field2='filed2'
+    >
+      没有 onClick
+    </AntdButton>
+
+    <AntdButton
+      onClick={() => {
+        console.log('onClick');
+      }}
+      data-log-common-type='AST_BUTTON'
+      data-log-common-content='have onClick'
+      data-log-field1='filed1'
+      data-log-field2='filed2'
+    >
+      有 onClick
+    </AntdButton>
+
+    <AntdButton
+      onClick={onReport}
+      data-log-common-type={AST_BUTTON}
+      data-log-common-content={`AST_BUTTON_${num}`}
+      data-log-field1='filed1'
+      data-log-field2='filed2'
+    >
+      变量
+    </AntdButton>
+  </AntdSpace>
+</div>
+```
 
 ---
 layout: intro
