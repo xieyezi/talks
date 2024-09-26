@@ -349,31 +349,126 @@ glowSeed: 18
 </RenderWhen>
 
 ---
+layout: fact
+---
 
-## AST在JavaScript开发中的应用
-
-<div v-click text-white:50 mt3 mb6>
-常见的 <b text-white:75 font-bold>应用</b> 和 <b text-white:75 font-bold>场景</b>：
+<div important text-3em>
+AST可以用来<span v-mark.green>干什么呢?</span>
 </div>
 
-<div flex="~ col gap-6">
+---
+
+# <span op50>AST可以用来..</span> <b v-click font-800>代码格式化</b>
+
+<div grid="~ cols-2 gap-4" h="80%">
+<div flex="~ col items-center justify-center">
+  <div i-logos:prettier text-25 />
+
+  <div op75 text-lg v-click>
+    Prettier
+  </div>
+
+  <a href="https://prettier.io/docs/en/options.html" text-sm v-click>prettier options</a>
+</div>
+
+<div flex="~ col items-center justify-center" v-click>
 
 <div flex="~ gap-2 items-center">
-  <div flex="~ gap-2 items-center" v-click>
-    <div i-simple-icons:prettier text-2xl />
-    <span font-bold>代码格式化</span>
-  </div>
-  <span v-click op75 ml4>如 <span text-blue>Prettier</span> 利用 AST 对代码进行格式化调整，使其符合规范</span>
+  Config in <div i-carbon:document-configuration inline-block /> Project
 </div>
+
+```js
+// prettier.config.js or .prettierrc.js
+module.exports = {
+  useTabs: false,
+  semi: true,
+  singleQuote: true,
+  jsxSingleQuote: true,
+  jsxBracketSameLine: true,
+  printWidth: 120,
+};
+```
+
+</div>
+</div>
+
+<!--
+[click] 代码格式化
+
+[click] AST可以用于代码格式化，相信大家肯定都用过 Prettier，我们可以定义一组代码的风格规则，例如每行代码后面要不要跟分号，要不要用单引号，或者双引号等，他在拿到我们的代码字符串之后，会将其转为AST，然后在按照我们定义的风格去对AST做调整，最后输出格式化之后的代码给我们。
+-->
+
+---
+
+
+# <span op50>AST可以用来..</span> <b v-click font-800>代码语法检查</b>
+
+<div grid="~ cols-2 gap-4" h-full>
+<div flex="~ col items-center justify-center">
+  <div i-logos:eslint text-25 />
+
+  <div op75 text-lg v-click>
+    ESLint
+  </div>
+
+  <a href="https://eslint.org/docs/latest/use/configure" text-sm v-click>eslint options</a>
+</div>
+
+<div flex="~ col items-center justify-center" v-click>
 
 <div flex="~ gap-2 items-center">
-  <div flex="~ gap-2 items-center" v-click>
-    <div i-nonicons:eslint-16 text-2xl />
-    <span font-bold>代码语法检查</span>
-  </div>
-  <span v-click op75 ml4>如 <span text-purple>ESLint</span> 通过 AST 检查代码是否遵循规定的编码规则</span>
+  Config in <div i-carbon:document-configuration inline-block /> Project
 </div>
 
+```js
+// .eslintrc.js
+module.exports = {
+  env: { browser: true, es2020: true },
+  parser: '@typescript-eslint/parser',
+  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'react-app',
+    'plugin:prettier/recommended',
+    'plugin:react-hooks/recommended',
+  ],
+  plugins: ['@typescript-eslint', 'react', 'react-refresh'],
+  rules: {
+    '@typescript-eslint/indent': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-angle-bracket-type-assertion': 0,
+    '@typescript-eslint/no-unused-vars': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
+    '@typescript-eslint/no-explicit-any': 0,
+    'no-restricted-globals': 0,
+    'import/no-anonymous-default-export': 0,
+    'jsx-a11y/alt-text': 0,
+    '@typescript-eslint/ban-ts-comment': 0,
+    'no-useless-escape': 0
+  },
+};
+```
+
+</div>
+</div>
+
+<!--
+[click] 代码语法检查
+
+[click]
+1. 代码解析：ESLint 首先使用解析器（如 espree）将源码解析成抽象语法树（AST），这是一种描述代码结构的树形表示。
+2. 规则加载：ESLint 依据配置文件加载一系列规则。这些规则通过访问 AST 的特定节点来检测代码是否符合预期的规范。
+3. AST 遍历：ESLint 通过遍历整棵 AST，在访问每个节点时，根据规则定义的节点访问器进行检查。例如，可以检测变量声明、函数调用等不同类型的节点。
+4. 问题报告：如果某个节点不符合规则的预期，ESLint 就会通过 context.report 方法记录一个错误或警告信息。
+5. 结果输出：ESLint 最终收集所有报告的问题，根据用户配置的格式输出检查结果，方便开发者查看和修正代码。
+
+-->
+---
+
+# <span op50>AST还可以用来...</span> <b v-click font-800>做更多事情</b>
+
+<div flex="~ col gap-6" mt20>
 <div flex="~ gap-2 items-center">
   <div flex="~ gap-2 items-center" v-click>
     <div i-uil:compress-arrows text-2xl />
@@ -414,27 +509,17 @@ glowSeed: 18
   <span v-click op75 ml4 flex="~ items-center gap1">对代码进行打包，如 webpack、rollup 等等</span>
 </div>
 
+<div flex="~ gap-2 items-center">
+  <div flex="~ gap-2 items-center" v-click>
+    <div i-fluent:more-circle-24-regular text-2xl />
+    <span font-bold>Much More...</span>
+  </div>
+</div>
+
 </div>
 
 <!--
-AST 是编程语言中重要的数据结构，用于分析、理解和转换代码，对于编译、解释和代码分析等应用具有重要作用。可以说，现在前端的发展如此蓬勃，离不开AST。
-
-[click] AST具体有哪些应用场景呢？
-
-[click] 代码格式化
-
-[click] AST可以用于代码格式化，相信大家肯定都用过 Prettier，我们可以定义一组代码的风格规则，例如每行代码后面要不要跟分号，要不要用单引号，或者双引号等，他在拿到我们的代码字符串之后，会将其转为AST，然后在按照我们定义的风格去对AST做调整，最后输出格式化之后的代码给我们。
-
-[click] 代码语法检查
-
-[click]
-1. 代码解析：ESLint 首先使用解析器（如 espree）将源码解析成抽象语法树（AST），这是一种描述代码结构的树形表示。
-2. 规则加载：ESLint 依据配置文件加载一系列规则。这些规则通过访问 AST 的特定节点来检测代码是否符合预期的规范。
-3. AST 遍历：ESLint 通过遍历整棵 AST，在访问每个节点时，根据规则定义的节点访问器进行检查。例如，可以检测变量声明、函数调用等不同类型的节点。
-4. 问题报告：如果某个节点不符合规则的预期，ESLint 就会通过 context.report 方法记录一个错误或警告信息。
-5. 结果输出：ESLint 最终收集所有报告的问题，根据用户配置的格式输出检查结果，方便开发者查看和修正代码。
-
-[click] 代码压缩
+[click][click] 代码压缩
 
 [click] 代码压缩是减少代码体积以提高加载速度的一种重要技术。这些工具，例如 UglifyJS 和 Terser，主要通过以下几个步骤来实现代码压缩：
 1. 代码解析：首先，压缩工具将源代码解析为抽象语法树（AST），这种树形结构能够清晰地表示代码的层次和表达。
@@ -443,10 +528,10 @@ AST 是编程语言中重要的数据结构，用于分析、理解和转换代�
 简化表达式：将复杂的表达式转换为等价的更简单或更短的形式。例如，将 x = x + 1 转换为 x++。
 函数内联：将频繁调用的小函数直接嵌入到调用位置，以减少函数调用的开销。
 变量与函数重命名：使用短名称替换长名称，以减少标识符的字符数量。
-3. AST 替换和重构：基于以上的优化和分析，工具在 AST 级别进行一系列替换和重构，例如：
+1. AST 替换和重构：基于以上的优化和分析，工具在 AST 级别进行一系列替换和重构，例如：
 常量折叠：将可以在编译时确定的常量表达式计算得出的值替换掉。
 死代码消除：移除永远不会执行的代码块，例如条件判断中永远为 false 的分支。
-4. 生成压缩后的代码：最后，工具将优化后的 AST 重新生成源代码。生成的代码更为简洁，去掉了所有多余的部分，从而显著减少了代码体积。
+1. 生成压缩后的代码：最后，工具将优化后的 AST 重新生成源代码。生成的代码更为简洁，去掉了所有多余的部分，从而显著减少了代码体积。
 
 [click] 代码转译
 
@@ -508,148 +593,279 @@ Polyfill 插入：对于不原生支持的新特性（如 Promise 或 Array.prot
 -->
 
 ---
+layout: fact
+---
+
+# 那么，AST怎么用呢？{.important-text-3em}
+
+<!--
+To summarize today's topic, I'd like to say that ESLint makes it possible to be One for All in two aspects. That you can have one config for all projects, and then one tool for everything related to code checking and modifications.
+-->
+
+---
+
+
+## 操作 <sup text-purple bg-purple:15 px1.5 rounded text-sm>AST</sup>
+
+<div flex="~ col gap-2" mt2>
+
+<img src="/babel1.png" w-180 shadow b-rounded-sm />
+
+<div mt5>
+<v-clicks>
+
+- 解析：使用解析器将源代码解析成 AST <sup text-purple>@babel/parser</sup>
+- 遍历：遍历 AST 树以查找或修改节点 <sup text-blue>@babel/traverse</sup>
+- 分析和修改：根据你的需求，执行分析、修改或其他操作 <sup text-green>@babel/type</sup>
+- 生成：将修改后的 AST 节点重新生成为代码  <sup text-orange>@babel/generator</sup>
+
+</v-clicks>
+</div>
+
+
+</div>
+
+<!--
+[click] 使用解析器将源代码解析成 AST，即生成一个 JSON 对象。在 JavaScript 中，@babel/parser 是一个常用的解析器。
+
+[click] 遍历 AST 树以查找或修改节点。你可以使用 AST 遍历器，如@babel/traverse，来帮助遍历 AST 树。
+
+[click]  分析和修改：根据你的需求，执行分析、修改或其他操作。你可以识别特定类型的节点，读取属性，执行条件检查，并修改节点，如@babel/types。
+
+[click] 生成：将修改后的 AST 节点重新生成为代码。你可以使用代码生成器，如@babel/generator，将 AST 节点转换回代码。
+-->
+
+
+---
+layout: center
+class: text-center
+---
+
+<h1 important-text-5xl text-orange v-mark.underline.orange>举个例子</h1>
+
+---
+class: grid grid-cols-[1fr_1fr] p0 h-full
+clicks: 1
 glow: left
 ---
 
-<div w="40%">
-
-## Config Inspector <sup text-purple bg-purple:15 px1.5 rounded text-sm>Official</sup>
+<div p4 flex="~ col gap-1 items-center justify-center" transition duration-500 :class="$clicks >= 1 ? '' : 'translate-x-65'">
 
 <div mt-4 />
-<v-click>
 
-```bash
-eslint --inspect-config
+<Repo name="umijs/babel-import-plugin" /> <span flex="~ inline gap-0.5 items-center" text-amber bg-amber:15 px1 rounded text-xs><div i-carbon-star-filled text="[0.8em]" /> 3.2k</span>
+
+</div>
+
+<div
+  bg-hex-5552 p8 border="l main" transition duration-500
+  :class="$clicks >= 1 ? '' : 'translate-x-100%'"
+>
+<div scale-90 origin-left-top w-160 mb--100 mr--40>
+
+# Antd按需导入
+
+<div mt-2 />
+
+```js
+// .babelrc or babel-loader option
+{
+  "plugins": [
+    ["import", {
+      "libraryName": "antd",
+      "libraryDirectory": "es",
+      "style": "css" // `style: true` 会加载 less 文件
+    }]
+  ]
+}
 ```
 
-</v-click>
-<div mt-4 />
+<div mt-6 />
+
+## 使用
+
+<div mt-2 />
+
+```js
+// babel-plugin-import 会帮你自动加载 JS 和 CSS
+import { DatePicker } from 'antd';
+
+👇
+
+import DatePicker from 'antd/es/date-picker'; // 加载 JS
+import 'antd/es/date-picker/style/css'; // 加载 CSS
+```
+</div>
+</div>
+
+<!--
+使用 React 技术栈的同学，都有接触过 antd、material-ui 等 UI 组件库。
+
+早期（没有 tree shaking 的时代）为了实现按需引入功能，我们会通过 babel-plugin-import 来优化我们的项目打包体积，做到只打包我们项目中所用到的模块。
+
+使用 antd 时, 需要加载组件的样式 antd/dist/antd.css, 但是我们大部分时候不需要使用到antd所有的组件, 更不需要载入所有组件的样式。[click] 
+
+
+当然现在新版的 antd 和 material-ui 中，默认已支持基于 ES modules 的 tree shaking 功能；而打包工具如：Webpack、Rollup 等在打包层面也支持了 tree shaking，使得我们不需要额外配置 babel-plugin-import 也能实现按需引入，这得益于 tree shaking。
+
+
+-->
+
+---
+
+<div grid="~ cols-[1fr_max-content_1fr] gap-4" mt--8>
+<div v-click>
+
+```ts {*|*|20-23|24-27|8-11|*}{at:1}
+class Plugin {
+  constructor(index = 0) {
+    // 初始化插件的状态键，用于在 Babel 的 state 对象中存储插件状态
+  }
+  getPluginState(state) {
+    // 获取或初始化插件的状态对象
+  }
+  importMethod() {
+    // 生成导入代码
+    // 例如，根据方法名称生成按需加载的 import 语句
+  }
+  ProgramEnter(path, state) {
+    // 在遍历 AST 开始时调用
+    // 初始化插件状态对象，包括指定的导入、库对象、选择的方法
+  }
+  ProgramExit(path, state) {
+    // 在遍历 AST 结束时调用
+    // 移除标记的旧 import 语句
+  }
+  ImportDeclaration(path, state) {
+    // 处理 import { xxx } from 'module' 的逻辑
+    // 收集依赖的模块
+  }
+  CallExpression(path, state) {
+    // 处理调用表达式的逻辑
+    // 检测和处理导入模块是否被实际使用
+  }
+}
+```
+
+</div>
+<div w-100 mt10>
+
+
 
 <v-clicks>
 
-- Visualize your config
-- Understand the composition
-- In-place documentations
-- File path tester
-
+- 收集 import 语句 { xxx } 中的模块名称
+- 分析模块导入后，是否被 call 使用到
+- 如果有被使用到，改写 import 语句，使得 path 具体到模块的所在目录
 </v-clicks>
+
+</div>
+</div>
+
+<!--
+1、首先是实例的属性初始化，将插件的配置信息 options 绑定到插件实例上；
+
+
+2、接着在 visitor.enter 阶段调用 ProgramEnter 方法初始化 Plugin 实例的 state 对象；
+
+pluginState.specified：import 包下面的模块名，如：Button；
+pluginState.selectedMethods：有效的 import 包下面的模块名，也就是导入了，且被使用到的模块；
+pluginState.pathsToRemove：用来存储 import xxx from 'antd' 源代码，用于替换删除旧的 import；
+
+3、收集导入的模块 分析每一条 import 语句，如果导入的包名和配置的 plugin.libraryName 一致，则收集导入的模块名称。
+
+4、查找模块是否被使用 调用 CallExpression 分析被使用到的模块名，调用 importMethod 方法改写 import 路径.
+
+
+5、改写模块导入路径（实现按需引入） importMethod 是 babel-plugin-import 的核心方法，import 模块的路径改写在这里处理。
+
+-->
+
+---
+layout: center
+class: text-center
+---
+
+<h1 important-text-5xl text-purple v-mark.underline.purple>自己试一试吧</h1>
+
+---
+class: grid grid-cols-[1fr_1fr] p0 h-full
+clicks: 1
+glow: left
+---
+
+<div p4 flex="~ col gap-1 items-center justify-center" transition duration-500 :class="$clicks >= 1 ? '' : 'translate-x-65'">
+
 <div mt-4 />
-<v-click>
 
-<!--<<< ./eslint.demo.config.ts {monaco-write}{height:'220px'}-->
-
-</v-click>
-</div>
-
-<iframe
-  :src="__DEV__ ? 'http://localhost:7777' : 'https://eslint-config.antfu.me/configs'"
-  onload="this.style.visibility = 'visible';"
-  scale-60 origin-top-right absolute right-0 top-0 bottom-0 w="95%" h="167%"
-  border="l main"
-  style="filter:contrast(1.15);visibility:hidden;"
-/>
-
-<div v-show="false">
-<!-- This block is for type discovery -->
-
-```ts {monaco}
-import antfu from '@antfu/eslint-config'
-```
+<GitlabRepo name="@pietra/auto-import" repoLink="https://gitlab.com/pietrastudio/web/npm/-/tree/main/packages/pietra-auto-import?ref_type=heads" /> <span flex="~ inline gap-0.5 items-center" text-amber bg-amber:15 px1 rounded text-md></span>
 
 </div>
 
-<!--
-The first one is the ESLint Config Inspector - a visualized DevTools, that allows you to inspect and play with your final resolved configs.
+<div
+  bg-hex-5552 p8 border="l main" transition duration-500
+  :class="$clicks >= 1 ? '' : 'translate-x-100%'"
+>
+<div scale-90 origin-left-top w-160 mb--100 mr--40>
 
-[click] You can try it by running `eslint --inspect-config` in your CLI under the project root where you have the flat config file, and it will open a browser page with UI, like the one you see on the right.
+# 导入
 
-[click] So, the first thing it does is to render each config item you have. You can see all configs listed here, because it's flat. Here I have a rather complex config setup with many config items. But with the name provided by each config, you can easily see and understand the purpose for each of them.
+<div mt-2 />
 
-[click] You can also expand each item to see how it contributes to the final config, like how many rules enabled, or what's their target file types, etc.
-
-[click] In each rule, you can also see their options, a short description, and also, a link to their documentation page.
-
-[click] Since in ESLint, you can have different rule sets that apply to different file types or are more granular to their exact file path. In the config inspector, you can also enter the file path to test how rules are enabled for that file.
-
-In another tab, you can also browse each rule available, given the plugins you have installed. You can filter them and see which rules you are using, which rules you don't, which are recommended ones, and which are deprecated.
-
-[click] Here I have my config file as an example. The config is a factory function that takes some rather high-level options. With the config inspector, we could see how it was resolved based on the options we provided. We could also try to change the options and see how it affects the result. For example, I could also provide it the path of my tsconfig, which will enable the type-aware rules for me automatically.
--->
-
----
-
-## Flat Config Utils <sup text-teal bg-teal:15 px1.5 rounded text-sm>Community</sup>
-
-<Repo name="antfu/eslint-flat-config-utils" op50 />
-
-<div grid="~ cols-[1fr_max-content_1fr] gap-4" mt2>
-<div v-click>
-
-```ts {*|*|7-9|10-17}{at:3}
-import eslint from '@eslint/js'
-import unocss from '@unocss/eslint-plugin'
-import vue from 'eslint-plugin-vue'
-import typescript from 'typescript-eslint'
-
-export default [
-  eslint.configs.recommended,
-  ...typescript.configs.recommand,
-  ...await unocss(),
-  {
-    files: ['*.vue'],
-    ...vue.configs['vue3-recommand'],
-    rules: {
-      ...vue.configs['vue3-recommand'].rules,
-      'vue/html-indent': ['error', 2]
-    }
-  }
-]
-
-// (pesudo code for demo)
+```bash
+yarn add @pietra/auto-import
 ```
 
-</div>
-<span i-carbon:arrow-right ma v-click />
-<div v-after>
 
-```ts {*|1,7|8-10|11-21}{at:3}
-import eslint from '@eslint/js'
-import unocss from '@unocss/eslint-plugin'
-import { compose } from 'eslint-flat-config-utils'
-import vue from 'eslint-plugin-vue'
-import typescript from 'typescript-eslint'
+## 配置
 
-export default compose(
-  eslint.configs.recommended,
-  typescript.configs.recommand, // auto spread
-  unocss() // auto await in parallel
-)
-  .append( // chainable extensions
-    vue.configs['vue3-recommand']
-  )
-  // override any configs with their name or index
-  .override('vue', {
-    files: ['*.vue'],
-    rules: {
-      'vue/html-indent': ['error', 2]
-    }
-  })
+<div mt-2 />
+
+```js
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    ...
+    react(),
+    pietraAutoImport({
+      include: [/\.[tj]sx?$/],
+      dts: './pietra-auto-imports.d.ts',
+      eslintrc: './.eslintrc-pietra-auto-import.json',
+      presets: {
+        react: true,
+        lodash: true,
+        classnames: true,
+        reactRouter: false,
+        reactRouterDom: false,
+        pietraCompoent: false,
+        pietraIcons: true,
+        antd: { prefix: 'Antd' },
+      },
+    }),
+  ],
+  ...
+});
 ```
-
 </div>
 </div>
 
 <!--
-To make config customization easier, I also made a small library called `eslint-flat-config-utils`.
+使用 React 技术栈的同学，都有接触过 antd、material-ui 等 UI 组件库。
 
-[click] For example, here is a flat config we might have. Depending on how each shared config is constructed, some might be a plain config object, some might be an array, and some might be a constructor that returns an object, an array or even a Promise. When you use them together, it's usually your responsibility to join them together as a single array.
+早期（没有 tree shaking 的时代）为了实现按需引入功能，我们会通过 babel-plugin-import 来优化我们的项目打包体积，做到只打包我们项目中所用到的模块。
 
-[click] With the config utils, [click] I made a utility function called `compose`, [click] which will automatically resolve the different types of configs, resolve the promise and merge them together.
+使用 antd 时, 需要加载组件的样式 antd/dist/antd.css, 但是我们大部分时候不需要使用到antd所有的组件, 更不需要载入所有组件的样式。[click] 
 
-[click] It also provides some chainable actions where you could insert extra configs anywhere you want, or override some config without the need to handle the merge manually.
+
+当然现在新版的 antd 和 material-ui 中，默认已支持基于 ES modules 的 tree shaking 功能；而打包工具如：Webpack、Rollup 等在打包层面也支持了 tree shaking，使得我们不需要额外配置 babel-plugin-import 也能实现按需引入，这得益于 tree shaking。
+
+
 -->
 
 ---
+
+
+
 
 ## ESLint Typegen <sup text-teal bg-teal:15 px1.5 rounded text-sm>Community</sup>
 
@@ -813,147 +1029,6 @@ This is just one direction of the possibilities with flat config we are currentl
 layout: fact
 ---
 
-# ESLint is More than a Linter{.important-text-3em}
-Mature and powerful AST Toolkit
-
-<!--
-Another topic I'd like to bring up today, is the fact that ESLint is much more than a Linter.
-
-To me, I see ESLint as a mature and powerful AST Toolkit that has a large ecosystem on its back.
--->
-
----
-
-# <span op50>ESLint can be a...</span> <b v-click font-800>Formatter</b>
-
-<div grid="~ cols-2 gap-4" h="80%">
-<div flex="~ col items-center justify-center">
-  <img src="/eslint-stylistic.png" w-80 v-click />
-
-  <div op75 text-lg v-click>
-    Collection of stylistic ESLint rules.<br>Formatting and linting in one go.
-  </div>
-
-  <a href="https://eslint.style" text-sm v-click>eslint.style</a>
-</div>
-
-<div flex="~ col items-center justify-center" v-click>
-
-<div flex="~ gap-2 items-center">
-  Configs in <div i-logos-visual-studio-code inline-block /> VS Code
-</div>
-
-```json
-{
-  // Auto fix on save
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
-
-  // Silent the stylistic rules in you IDE,
-  // but still auto fix them
-  "eslint.rules.customizations": [
-    { "rule": "@stylistic/*", "severity": "off" }
-  ]
-}
-```
-
-</div>
-</div>
-
-<!--
-The is that ESLint can be a [click] Formatter.
-
-This is certainly not new, as many projects have been using ESLint that way since the very beginning.
-
-While this topic is actually a bit controversial, which you might hear people saying you should use a dedicated formatter like Prettier or dprint. To me, I see this all down to that those stylistic rules for ESLint take a lot of maintenance effort. Last year, ESLint and the TypeScript ESLint teams decided to deprecate those stylistic rules from the core. [click] And then, I initiated the ESLint Stylistic project, gathering all those stylistic rules for JS, TS, and JSX into this organization and making a community keep maintaining them. I keep using ESLint as formatter as I see it much more flexible and customizable than Prettier due to ESLint's nature.
-
-[click] If you are using VS Code, you can see `editor.codeActionOnSave` to auto-fix eslint errors on save. And use `eslint.rules.customizations` to silent stylistic rules in your IDE so they work more like a formatter. For other code editors, I believe there are similar configs for doing the same.
--->
-
----
-
-# <span op50>ESLint can be a...</span> <b v-click font-800>Codemod</b>
-
-<div v-click>
-
-<repo name="antfu/eslint-plugin-command" />
-
-<video src="/eslint-plugin-command-half.mov" mt-4 w-130 saturate-110 rounded shadow border="~ main" controls />
-
-</div>
-
-<!--
-One ESLint rule is essential a function that takes the code and AST, reporting errors with optional fix information.
-
-This means that ESLint can also be a nice tool for [click] codemod.
-
-For example, [click] I made `eslint-plugin-command` to do on-demand micro-codemod.
-
-As you can see in the video, we could put a magic comment saying `to-function` right above an arrow function. Upon saving, the arrow function will be automatically converted into the function declaration, without you to manually move things around.
-
-Similarly, you can also convert it back with `to-arrow`, sort an object or array with `keep-sorted`, make sure an array is unique with `keep-unique`... etc.
-
-If you learn a little bit about AST, it shouldn't be hard to write your one-off codemod rules to migrate your codebase as well.
--->
-
----
-
-# <span op50>ESLint can be a...</span> <b v-click font-800>Linter for other Languages</b>
-
-<div scale-75 origin-left-top mb--28 mt--3 class="[&_td]:py1 [&_table]:w-130%" v-click="2">
-<v-clicks>
-
-| Language | Plugin | Maintainers |
-| --- | --- | --- |
-| <span i-logos-typescript-icon inline-block align-middle /> TypeScript | [`@typescript-eslint`](https://typescript-eslint.io) | {@typescript-eslint} {@bradzacher} {@JoshuaKGoldberg} |
-| <span i-logos-vue inline-block align-middle /> Vue | [`eslint-plugin-vue`](https://github.com/vuejs/eslint-plugin-vue) | {@ota-meshi} {@vuejs} |
-| <span i-logos-svelte-icon inline-block align-middle /> Svelte | [`eslint-plugin-svelte`](https://github.com/sveltejs/eslint-plugin-svelte) | {@ota-meshi} {@sveltejs} |
-| <span i-logos-astro-icon invert hue-rotate-180 inline-block align-middle /> Astro | [`eslint-plugin-astro`](https://github.com/ota-meshi/eslint-plugin-astro) | {@ota-meshi} |
-| <span i-logos-json invert inline-block align-middle /> JSON | [`eslint-plugin-jsonc`](https://github.com/ota-meshi/eslint-plugin-jsonc) | {@ota-meshi} |
-| <span i-vscode-icons-file-type-light-yaml inline-block align-middle /> YAML | [`eslint-plugin-yml`](https://github.com/ota-meshi/eslint-plugin-yaml) | {@ota-meshi} |
-| <span i-logos-toml invert hue-rotate-180 inline-block align-middle /> TOML | [`eslint-plugin-toml`](https://github.com/ota-meshi/eslint-plugin-toml) | {@ota-meshi} |
-| <span i-logos-graphql inline-block align-middle /> GraphQL | [`graphql-eslint`](https://github.com/dimaMachina/graphql-eslint) | {@dimaMachina} |
-| <span i-vscode-icons-file-type-html inline-block align-middle /> HTML | [`html-eslint`](https://github.com/yeonjuan/html-eslint) | {@yeonjuan} |
-| <span i-vscode-icons-file-type-mdx inline-block align-middle /> MDX | [`eslint-mdx`](https://github.com/mdx-js/eslint-mdx) | {@JounQin} |
-| <span i-logos-prettier inline-block align-middle /> Other formats* | [`eslint-plugin-format`](https://github.com/antfu/eslint-plugin-format) | {@antfu} |
-
-</v-clicks>
-</div>
-<v-click>
-
-[ESLint RFC #99 - ESLint Language Plugins](https://github.com/eslint/rfcs/blob/main/designs/2022-languages/README.md)
-
-</v-click>
-
-<!--
-And finally, I'd like to mention that ESLint can also [click] lint for many other languages other than JavaScript.
-
-[click] For example, we know we have `@typescript-eslint` to make ESLint understand TypeScript.
-
-[click] We have `eslint-plugin-vue` for Vue Single file component, [click] `eslint-plugin-svelte` for Svelte component [click] and `eslint-plugin-astro` for Astro.
-
-[click] We could also have `eslint-plugin-jsonc` to lint JSON files. Which could be very handle to be used to sort certain field in certain JSON files. For example, I use it to keep my dependencies list in my `package.json` always sorted.
-
-[click] Similarly, we have the support for YAML and [click] TOML files. As you can see, many of those plugins are maintained by Ota Meshi - he is truly amazing!
-
-[click] Then we have `graphql-eslint` for GraphQL by Dima, [click] `html-eslint` for HTML by Yeon Juan [click], and `eslint-mdx` by Joun Qin.
-
-[click] I also made a `eslint-plugin-format` to use Prettier or dprint to format files like CSS that are not yet have an ESLint integration.
-
-That's only a few I could list here. [click] You can also check the ESLint's RFC #99, where they are trying to make ESLint more language agnostic to support the linting for more languages easier.
--->
-
----
-disabled: true
----
-
-# <span op50>ESLint can be a...</span> <b v-click font-800>AST Toolkit</b>
-
----
-layout: fact
----
-
 # One for All{.important-text-3em}
 
 One config for all projects<br>
@@ -963,72 +1038,7 @@ One tool for _everything*_
 To summarize today's topic, I'd like to say that ESLint makes it possible to be One for All in two aspects. That you can have one config for all projects, and then one tool for everything related to code checking and modifications.
 -->
 
----
-class: grid grid-cols-[1fr_1fr] p0 h-full
-clicks: 1
-glow: left
----
 
-<div p4 flex="~ col gap-1 items-center justify-center" transition duration-500 :class="$clicks >= 1 ? '' : 'translate-x-65'">
-
-<div mt-4 />
-
-<Repo name="antfu/eslint-config" /> <span flex="~ inline gap-0.5 items-center" text-amber bg-amber:15 px1 rounded text-xs><div i-carbon-star-filled text="[0.8em]" /> 3.2k</span>
-
-</div>
-
-<div
-  bg-hex-5552 p8 border="l main" transition duration-500
-  :class="$clicks >= 1 ? '' : 'translate-x-100%'"
->
-<div scale-70 origin-left-top w-160 mb--100 mr--40>
-
-# @antfu/eslint-config
-
-<div mb-10>
-
-[![code style](https://antfu.me/badge-code-style.svg)](https://github.com/antfu/eslint-config)
-
-</div>
-
-## Quick Start
-
-<div mt-2 />
-
-```bash
-npx @antfu/eslint-config@latest
-```
-
-<div mt-6 />
-
-## Features
-
-<div mt-2 />
-
-- Auto fix for formatting <sup>aimed to be used standalone **without** Prettier</sup>
-- Reasonable defaults, best practices, only one line of config
-- Work with TypeScript, JSX, Vue, JSON, YAML, Toml, Markdown, Out-of-box.
-- Opinionated, but very customizable
-- ESLint Flat config, compose easily!
-- Optional React, Svelte, UnoCSS, Astro, Solid support
-- Optional formatters support for formatting CSS, HTML, XML, etc.
-- **Style principle**: Minimal for reading, stable for diff, consistent
-  - Sorted imports, dangling commas
-  - Single quotes, no semi
-  - Using ESLint Stylistic
-- Respects `.gitignore` by default
-- Supports ESLint v9.0+ or v8.50.0+
-
-</div>
-</div>
-
-<!--
-If you want to learn more, you can check my personal ESLint config, where I used all the tricks I mentioned today.
-
-I am honestly a bit flattered to see that even tho I didn't intend to have this config used by the others, it ends up being quite popular to have 3 thousand stars and over 30 thousand projects using it on GitHub.
-
-[click] I wasn't trying to make you use my config, but hopefully, it can be a good reference for you to build your own shared config that is both powerful and flexible.
--->
 
 ---
 layout: intro
