@@ -1,5 +1,6 @@
 {
   "name": "my-talks",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,5 +9,12 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@iconify/json": "^2.2.252",
+    "unocss": "^0.62.4"
+  },
+  "devDependencies": {
+    "@types/seedrandom": "^3.0.8"
+  }
 }

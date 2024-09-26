@@ -163,56 +163,44 @@ const a = 'Hello World';
 ```
 <div flex="~ col gap-2" mt-3>
 
-<div v-click class="slidev-vclick-target" :class="$clicks === 1 ? 'text-green' : ''">
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
+<div v-click>
+  <div i-bi:1-circle text-green inline-block />
 读取 const 并识别出关键字 const
 </div>
 
-<div v-click class="slidev-vclick-target" :class="$clicks === 2 ? 'text-green' : ''">
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
+<div v-click>
+  <div i-bi:2-circle text-green inline-block />
 跳过空格
 </div>
 
-<div v-click class="slidev-vclick-target" :class="$clicks === 3 ? 'text-green' : ''" >
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
-  <span v-mark.green.delay400="5">
-    读取 a 并识别为标识符
-  </span>
+<div v-click>
+  <div i-bi:3-circle text-green inline-block />
+ 读取 a 并识别为标识符
 </div>
 
-<div v-click class="slidev-vclick-target">
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
-  <span v-mark.green.delay400="5">
-    跳过空格
-  </span>
+<div v-click>
+  <div i-bi:4-circle text-green inline-block/>
+  跳过空格
 </div>
 
-<div v-click class="slidev-vclick-target">
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
-  <span v-mark.green.delay400="5">
-    读取 = 并识别为操作符
-  </span>
+<div v-click>
+  <div i-bi:5-circle text-green inline-block />
+  读取 = 并识别为操作符
 </div>
 
-<div v-click class="slidev-vclick-target">
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
-  <span v-mark.green.delay400="5">
-    跳过空格
-  </span>
+<div v-click>
+  <div i-bi:6-circle text-green inline-block />
+  跳过空格
 </div>
 
-<div v-click class="slidev-vclick-target">
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
-  <span v-mark.green.delay400="5">
-    读取 ' 并识别完整的字符串字面量 'Hello World'
-  </span>
+<div v-click>
+  <div i-bi:7-circle text-green inline-block />
+  读取 ' 并识别完整的字符串字面量 'Hello World'
 </div>
 
-<div v-click class="slidev-vclick-target">
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
-  <span v-mark.green.delay400="5">
-   读取 ; 并识别为语句结束符
-  </span>
+<div v-click>
+  <div i-bi:8-circle text-green inline-block />
+  读取 ; 并识别为语句结束符
 </div>
 
 </div>
@@ -224,7 +212,8 @@ const a = 'Hello World';
 ### Lexical Analysis
 
 
-```js
+```js {*|3|3|4|4|5|5|6|*}{at:1}
+//tokens
 [
   { type: 'Keyword', value: 'const' },
   { type: 'Identifier', value: 'a' },
@@ -237,29 +226,69 @@ const a = 'Hello World';
 
 </div>
 
+<!--
+在词法分析器里，每个关键字是一个 Token ，每个标识符是一个 Token，每个操作符是一个 Token，每个标点符号也都是一个 Token。除此之外，还会过滤掉源程序中的注释和空白字符（换行符、空格、制表符等）。最终，整个代码将被分割进一个tokens列表。
+
+-->
+
+
+
 ---
 
 <div grid="~ cols-2 gap-6" h-full>
 <div>
 
 
-## 语法分析
+## Tokens
 
 <div mt-4 h-42>
 
-<v-clicks at="3">
+<v-clicks at="3" text-sm>
 
-- Multiple sources `.eslintrc`, `.eslintrc.js`, `.eslintrc.json`, `package.json`, etc.
-- Convention based `extends`
-- Package name based `plugins`
-- Inheritance tree can be complex
+- 深度优先，开始遍历 `tokens`
+- const 关键字生成 `VariableDeclaration` 节点
+- a 标识符和赋值操作符 = 生成 `VariableDeclarator` 节点
+- 'Hello World' 字符串生成 `StringLiteral` 节点
 
 </v-clicks>
 
 </div>
-<div v-click="1" transition duration-800 :class="$clicks < 3 ? 'translate-y--160px': ''">
+<div v-click="1" transition duration-800 :class="$clicks < 3 ? 'translate-y--160px': 'translate-y--60px'">
 
-```json
+```js
+//tokens
+[
+  { type: 'Keyword', value: 'const' },
+  { type: 'Identifier', value: 'a' },
+  { type: 'Operator', value: '=' },
+  { type: 'StringLiteral', value: 'Hello World' },
+  { type: 'Punctuation', value: ';' }
+]
+```
+
+
+<div v-click="6">
+
+```js
+parseVariableDeclaration
+├── VariableDeclaration
+    ├── parseVariableDeclarator
+    │   ├── VariableDeclarator
+    │       ├── Identifier(a)
+    │       ├── parseExpression
+    │           ├── Literal('Hello World')
+```
+</div>
+
+</div>
+</div>
+<div>
+
+## Syntax Analysis
+
+<div v-click="2" transition duration-800 delay-50>
+
+```json {*|3|7|10|16|*}{at:3}
 {
   "program": {
     "type": "Program",
@@ -289,197 +318,193 @@ const a = 'Hello World';
 
 </div>
 </div>
-<div>
-
-## Flat Config
-
-<div mt-4 h-42>
-
-<v-clicks at="3">
-
-- Single source `eslint.config.js` <sup op75>& `.cjs` `.mjs`</sup><br><span op0>-</span>
-- Explicit native imports
-- Plugins are objects <sup op75>capability to rename plugins</sup>
-- Composable, easier to trace back
-
-</v-clicks>
-
-</div>
-<div v-click="2" transition duration-800 delay-50 :class="$clicks < 3 ? 'translate-y--160px': ''">
-
-```js {*|2-3,8-9|4-5,11-14|*}{at:4}
-// eslint.config.js
-import eslint from '@eslint/js'
-import typescript from '@eslint-typescript/eslint-plugin'
-import n from 'eslint-plugin-n'
-import vue from 'eslint-plugin-vue'
-
-export default [ // export an array of configs
-  eslint.configs.recommended,
-  ...typescript.configs.recommended,
-  {
-    plugins: {
-      vue,
-      node: n, // do a rename here
-    },
-    rules: {
-      'vue/html-indent': ['error', 2]
-    }
-  },
-  // ...
-]
-```
-
-</div>
-</div>
 </div>
 
 <!--
-In case you have never heard about it or haven't dig into the docs yet. Here, let me make a quick comparison between the legacy eslintrc config [click] and the new flat config for you. [click]
+接下来我们来看看语法分析是如何生成AST的[click]
 
-To differentiate between those two configuration formats is rather straightforward. [click] The legacy config is named with `.eslintrc` that supports various extensions which might also read from your `package.json`. The flat config, on the other hand, would only be loaded from `eslint.config.js`, a JavaScript config file as the single source of truth.
+左边的是刚刚生成的tokens，现在马上进行下一步：语法分析[click] 
 
-[click] When it comes to reusing the shared config, the legacy config format implicitly uses the conventional-based `extends` property to load that config from your local `node_modules`. You would need to learn the convention a little bit to know how it resolves. While in the flat config we use the native import, where it's more explicit, and gives a lot more controls to you.
+经过语法分析之后得到一颗AST,长这个样子，接下来我们来逐步分析一下生成节点的过程：[click]
 
-[click] For plugins, it used to take an array of strings, which is again, convention-based and coupled with the plugins' package name. Now in the flat config, it takes a named object for plugins. This means you can now rename plugins easily, or switch to a fork without being forced to change every rule in your config.
-
-[click] Also, the inheritance nature of `extends` might result in a very complex tree structure as the shared configs can also have nested `extends` inside. In the flat config, it gets simplified a lot, where you explicitly import the shared configs as multiple objects or arrays, and compose them into a single flat one.
+1. 准备一个栈，设置记号流索引，并添加一个根节点。开始遍历tokens [click]
+2. 识别 const 关键字，生成 VariableDeclaration 节点，并推入栈中。 [click]
+3. 识别标识符 a 和赋值操作符 =，生成 VariableDeclarator 节点，并推入栈中。 [click]
+4. 识别字符串字面量 'Hello World'，生成 Literal 节点，并附加到 VariableDeclarator 节点中。完成当前层次的节点处理， 并弹出栈。[click]
+5. 完成AST的构建
 -->
 
 ---
+clicks: 5
+zoom: 0.75
+layout: none
+class: flex h-full w-full
+glow: top
+glowOpacity: 0.2
+glowSeed: 18
+---
 
-## Flat Config
-
-<Timeline mt2 />
-
-<v-clicks>
-
-- RFC was created at January 2019
-- Experimental in `v8.21.0`
-- Stable in `v8.45.0`
-- Default in `v9.0.0`
-- JavaScript config with full control
-- Simplified inheritance and overriding
-- Flexible, Dynamic, Customizable
-
-</v-clicks>
-
-<!--
-[click] For a little bit more context, Here is a graph I drew to demonstrate the timeline. While the flat config might sound new to some of you, it has actually been planned for 5 years already. [click] The RFC was created in January 2019, [click] first implementation available in v8.21.0 as experimental, which was two years ago.  [click] It became stable in v8.45.0, [click] and then became the default recently in v9.0.0. In between, the ESLint team has published multiple blog posts to explain the reasons why they want to introduce the new format, and shared the roadmap of rolling out. That's a lot of effort spent across this 5 years plan - huge respect to the ESLint team.
-
-So, as we mentioned in the previous slide, [click] the biggest benefit of flat config, is that now it's in JS where you have full control. [click] It uses native import to resolve the plugins and configs, making the inheritance and overriding a lot simplified. [click] Because it's fully in JavaScript, shared configs can be factory functions that take users' options; and users can have a lot more capability to do the customizations towards their specific needs.
--->
+<RenderWhen context="visible">
+  <YakMap />
+</RenderWhen>
 
 ---
 
-# Migration [`@eslint/migrate-config`](https://www.npmjs.com/package/@eslint/migrate-config)
+## AST在JavaScript开发中的应用
 
-CLI tool to convert legacy config to flat config
+<div v-click text-white:50 mt3 mb6>
+常见的 <b text-white:75 font-bold>应用</b> 和 <b text-white:75 font-bold>场景</b>：
+</div>
 
-```bash
-npx @eslint/migrate-config .eslintrc.json
-```
+<div flex="~ col gap-6">
 
-<div grid="~ cols-[1fr_max-content_1fr] gap-4" mt-4 v-click>
+<div flex="~ gap-2 items-center">
+  <div flex="~ gap-2 items-center" v-click>
+    <div i-simple-icons:prettier text-2xl />
+    <span font-bold>代码格式化</span>
+  </div>
+  <span v-click op75 ml4>如 <span text-blue>Prettier</span> 利用 AST 对代码进行格式化调整，使其符合规范</span>
+</div>
 
-```json
-// .eslintrc.json
-{
-  "env": {
-    "node": true,
-    "es6": true
-  },
-  "parserOptions": {
-    "ecmaVersion": 2020,
-    "sourceType": "module"
-  },
-  "extends": [
-    "eslint:recommended",
-    "plugin:ava/recommended",
-    "prettier"
-  ],
-  "plugins": ["prettier", "import"],
-  "rules": {
-    "prettier/prettier": 2,
-    "ava/no-ignored-test-files": 0,
-    "ava/no-import-test-files": 0,
-    "import/no-unresolved": [
-      2,
-      {
-        "ignore": ["ava", "got"]
-      }
-    ],
-    "import/no-unused-modules": 2,
-    "import/order": [
-      2,
-      {
-        "newlines-between": "never"
-      }
-    ]
-  }
-}
-```
+<div flex="~ gap-2 items-center">
+  <div flex="~ gap-2 items-center" v-click>
+    <div i-nonicons:eslint-16 text-2xl />
+    <span font-bold>代码语法检查</span>
+  </div>
+  <span v-click op75 ml4>如 <span text-purple>ESLint</span> 通过 AST 检查代码是否遵循规定的编码规则</span>
+</div>
 
-<span i-carbon:arrow-right mt-40 />
+<div flex="~ gap-2 items-center">
+  <div flex="~ gap-2 items-center" v-click>
+    <div i-uil:compress-arrows text-2xl />
+    <span font-bold>代码压缩</span>
+  </div>
+  <span v-click op75 ml4 flex="~ items-center gap1">通过 AST 重构代码，移除未使用的变量和函数，减少代码大小</span>
+</div>
 
-```js
-import { FlatCompat } from '@eslint/eslintrc'
-import _import from 'eslint-plugin-import'
-// eslint.config.mjs
-import prettier from 'eslint-plugin-prettier'
+<div flex="~ gap-2 items-center">
+  <div flex="~ gap-2 items-center" v-click>
+    <div i-mdi:babel text-2xl />
+    <span font-bold>代码转译</span>
+  </div>
+  <span v-click op75 ml4>如 <span text-amber>Babel</span> 通过AST转译 ES6+ 代码到 ES5 代码</span>
+</div>
 
-const compat = new FlatCompat()
-export default [
-  ...compat.extends(
-    'eslint:recommended',
-    'plugin:ava/recommended',
-    'prettier'
-  ),
-  {
-    plugins: {
-      prettier,
-      import: _import,
-    },
-    languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: 'module',
-    },
-    rules: {
-      'prettier/prettier': 2,
-      'ava/no-ignored-test-files': 0,
-      'ava/no-import-test-files': 0,
+<div flex="~ gap-2 items-center">
+  <div flex="~ gap-2 items-center" v-click>
+    <div i-nonicons:vscode-16 text-2xl />
+    <span font-bold>IDE 功能增强</span>
+  </div>
+  <span v-click op75 ml4>IDE 如 <span text-blue-6>VSCode</span> 可以利用 AST 来提供代码导航、高亮等功能</span>
+</div>
 
-      'import/no-unresolved': [2, {
-        ignore: ['ava', 'got'],
-      }],
-      'import/no-unused-modules': 2,
-      'import/order': [2, {
-        'newlines-between': 'never',
-      }],
-    },
-  },
-]
-```
+<div flex="~ gap-2 items-center">
+  <div flex="~ gap-2 items-center" v-click>
+    <div i-solar:code-2-bold text-2xl />
+    <span font-bold>源代码映射</span>
+  </div>
+  <span v-click op75 ml4>在编译器和调试工具中，AST 可用于生成源代码和转换后代码之间的映射，方便调试</span>
+</div>
+
+<div flex="~ gap-2 items-center">
+  <div flex="~ gap-2 items-center" v-click>
+    <div i-teenyicons:rollupjs-outline text-2xl />
+    <span font-bold>代码打包</span>
+  </div>
+  <span v-click op75 ml4 flex="~ items-center gap1">对代码进行打包，如 webpack、rollup 等等</span>
+</div>
 
 </div>
 
 <!--
-Before we talk about the new exciting stuff, let me first quickly go through the tools for migrating your legacy config to the new flat config, in case you might need them.
+AST 是编程语言中重要的数据结构，用于分析、理解和转换代码，对于编译、解释和代码分析等应用具有重要作用。可以说，现在前端的发展如此蓬勃，离不开AST。
 
-We have a CLI `@eslint/migrate-config` that automatically convert your legacy config file to flat config. [click] Some runtime utilities for compatibility will be introduced automatically along the way as well.
+[click] AST具体有哪些应用场景呢？
 
-I would recommend you check the ESLint docs and migration guide for more detailed instructions.
--->
+[click] 代码格式化
 
----
-layout: fact
----
+[click] AST可以用于代码格式化，相信大家肯定都用过 Prettier，我们可以定义一组代码的风格规则，例如每行代码后面要不要跟分号，要不要用单引号，或者双引号等，他在拿到我们的代码字符串之后，会将其转为AST，然后在按照我们定义的风格去对AST做调整，最后输出格式化之后的代码给我们。
 
-# Toolings{.important-text-3em}
-New tools and possibilities with Flat Config
+[click] 代码语法检查
 
-<!--
-And now, let's talk about the interesting new tools and possibilities that are enabled by this new format.
+[click]
+1. 代码解析：ESLint 首先使用解析器（如 espree）将源码解析成抽象语法树（AST），这是一种描述代码结构的树形表示。
+2. 规则加载：ESLint 依据配置文件加载一系列规则。这些规则通过访问 AST 的特定节点来检测代码是否符合预期的规范。
+3. AST 遍历：ESLint 通过遍历整棵 AST，在访问每个节点时，根据规则定义的节点访问器进行检查。例如，可以检测变量声明、函数调用等不同类型的节点。
+4. 问题报告：如果某个节点不符合规则的预期，ESLint 就会通过 context.report 方法记录一个错误或警告信息。
+5. 结果输出：ESLint 最终收集所有报告的问题，根据用户配置的格式输出检查结果，方便开发者查看和修正代码。
+
+[click] 代码压缩
+
+[click] 代码压缩是减少代码体积以提高加载速度的一种重要技术。这些工具，例如 UglifyJS 和 Terser，主要通过以下几个步骤来实现代码压缩：
+1. 代码解析：首先，压缩工具将源代码解析为抽象语法树（AST），这种树形结构能够清晰地表示代码的层次和表达。
+2. 代码分析与优化：
+删除注释和空白：工具会移除所有不影响代码功能的注释和空白字符。
+简化表达式：将复杂的表达式转换为等价的更简单或更短的形式。例如，将 x = x + 1 转换为 x++。
+函数内联：将频繁调用的小函数直接嵌入到调用位置，以减少函数调用的开销。
+变量与函数重命名：使用短名称替换长名称，以减少标识符的字符数量。
+3. AST 替换和重构：基于以上的优化和分析，工具在 AST 级别进行一系列替换和重构，例如：
+常量折叠：将可以在编译时确定的常量表达式计算得出的值替换掉。
+死代码消除：移除永远不会执行的代码块，例如条件判断中永远为 false 的分支。
+4. 生成压缩后的代码：最后，工具将优化后的 AST 重新生成源代码。生成的代码更为简洁，去掉了所有多余的部分，从而显著减少了代码体积。
+
+[click] 代码转译
+
+[click] 代码转译（也称为代码编译或代码转换）是一种将代码从一种形式转换为另一种形式的技术。许多工具（如 Babel 和 TypeScript）通过以下步骤实现代码转译：
+1. 代码解析：首先，转译工具会将源代码解析成抽象语法树（AST）。这种树形结构详细地表示了代码的语法和结构。
+2. AST 变换与优化：
+语法特性转换：工具会根据目标环境的特性支持情况，将现代语法转换为等价的、更广泛支持的语法。例如，Babel 可以将 ES6 的箭头函数转换为普通的函数表达式。
+Polyfill 插入：对于不原生支持的新特性（如 Promise 或 Array.prototype.includes），工具可以插入相应的 polyfill 以确保兼容性。
+模块转换：将 ES6 的模块导入导出语句（如 import 和 export）转换为常见的模块化格式（如 CommonJS 或 AMD）。
+3. AST 替换和重构：工具在 AST 层面进行详细的变换和重构。例如：
+类转换：将 ES6 的 class 语法转换为基于原型的传统 JavaScript 类定义方式。
+高级语法特性：处理诸如展开操作符、解构赋值、默认参数值等高阶语法，并转换为等价的、更旧式的代码结构。
+4. 生成转译后的代码：最后，工具会将变换和优化后的 AST 转换回源代码。这段新生成的代码在功能上等同于最初代码，但使用了兼容性更广的语法和特性。
+
+[click] IDE增强
+
+[click] 在VScode写代码的时候，编辑器会对一些关键词进行高亮显示，比如关键字、变量名、字符串、函数名等。这个也是利用AST来实现的。
+1. 智能提示与代码补全：
+  
+上下文感知：由于 AST 描述了代码的完整结构，编辑器可以通过其子节点和父节点来理解当前上下文。例如，在函数内部提示局部变量，而在全局范围内提示全局函数和变量。
+
+类型推断：对于 TypeScript 或具备类型信息的语言，编辑器可以利用 AST 中的类型信息为变量、函数等提供类型安全的补全建议。
+
+2. 语法检查与错误报告：
+
+实时分析：编辑器通过持续解析和分析 AST，可以实时检测语法和类型错误，并在编辑过程中即时反馈。例如，使用 TypeScript 编译器可以检测类型不匹配的错误。
+
+错误提示：定位到具体的错误节点，并在编辑器中高亮显示出错位置，同时提供详细的错误信息。
+
+3. 代码重构：
+  
+重命名：基于 AST，编辑器可以精确地进行跨文件的变量和函数重命名操作，确保所有引用的地方都得到正确更新。
+
+提取方法/拆分变量：编辑器可以通过 AST 提供智能重构选项，例如将一段重复代码提取成方法，或将复杂表达式拆分成多个变量。
+
+[click] 源代码映射，也就是SourceMap
+
+[click]
+1. 代码解析：工具首先将源代码解析成抽象语法树（AST），这包括了源代码的语法和结构信息。
+2. AST 转换：
+代码优化或转译：根据需要，工具可能会对 AST 进行各种优化或转译操作。例如，压缩工具会进行变量重命名和空白删除，而转译工具（如 Babel）会将新语法转换为旧语法。
+
+3. 生成目标代码和源映射：
+  
+目标代码生成：工具根据转换后的 AST 生成新的源代码。
+
+生成 Source Map：与此同时，工具还会生成一个 Source Map 文件，这个文件包含从目标代码到原始源代码的映射信息。这个过程涉及记录每个目标代码片段与其对应的原始代码片段的位置信息。
+
+4. 调试和追踪：
+  
+加载 Source Map：调试器（如浏览器开发者工具 or Node.js 调试器）加载目标代码和对应的 Source Map 文件。
+
+源码定位：当发生错误或需要调试时，调试器能够利用 Source Map 将目标代码中的位置映射回原始源代码中的位置，帮助开发者更直观地查看和理解问题。
+
+
+[click] 代码打包
+
+[click] 我们常用的Webpack、Rollup、Vite这些工具也都是基于AST来进行打包的
 -->
 
 ---
