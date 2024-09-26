@@ -849,196 +849,201 @@ export default defineConfig({
 </div>
 </div>
 
-<!--
-使用 React 技术栈的同学，都有接触过 antd、material-ui 等 UI 组件库。
-
-早期（没有 tree shaking 的时代）为了实现按需引入功能，我们会通过 babel-plugin-import 来优化我们的项目打包体积，做到只打包我们项目中所用到的模块。
-
-使用 antd 时, 需要加载组件的样式 antd/dist/antd.css, 但是我们大部分时候不需要使用到antd所有的组件, 更不需要载入所有组件的样式。[click] 
-
-
-当然现在新版的 antd 和 material-ui 中，默认已支持基于 ES modules 的 tree shaking 功能；而打包工具如：Webpack、Rollup 等在打包层面也支持了 tree shaking，使得我们不需要额外配置 babel-plugin-import 也能实现按需引入，这得益于 tree shaking。
-
-
--->
-
----
-
-
-
-
-## ESLint Typegen <sup text-teal bg-teal:15 px1.5 rounded text-sm>Community</sup>
-
-<Repo name="antfu/eslint-typegen" op50 />
-
-<v-clicks>
-
-![](/eslint-typegen.png){.w-200.rounded-lg.shadow.border.border-main}
-
-</v-clicks>
-
-<!--
-And then, thanks to the flexibility and also the full context available in the flat config, it also make the type generation possible. [click]
-
-Simply wrap the entire config array you exported with the typegen function, it will generate a local .d.ts file based on all the plugins you have installed. This provides you with autocomplete and typechecks for all the rules are you using.
--->
-
----
-layout: fact
----
-
-# One for All{.important-text-3em}
-One config for all projects
-
-<!--
-So here, I'd like to bring back the title - One for All.
-
-With the maximized flexibility and customizability - it's now possible to have a single shared config that covers all different types of projects.
--->
-
 ---
 
 <div grid="~ cols-2 gap-8">
 
 <div flex="~ col gap-2">
 
-### Legacy Config
+### Before
 
-```json {*|3-7|*|10-14|*}{at:1}
-{
-  "extends": [
-    "@antfu/eslint-config",
-    "@antfu/eslint-config-ts",
-    "@antfu/eslint-config-vue",
-    "@antfu/eslint-config-vue-ts"
-    // ...provide every combination?
-  ],
-  "rules": {
-    // ...a lot overrides
-    "indent": ["error", 4],
-    "@typescript-eslint/indent": ["error", 4],
-    "jsx-indent": ["error", 4],
-    "vue/indent": ["error", 4]
-  }
-}
+<div scale-90 mt--10>
+
+```tsx
+const AST = () => {
+  const [num, setNum] = useState(0);
+  const testLodash = useMemo(() => isNumber(num), [num]);
+
+  useEffect(() => {
+    console.log('AST');
+  }, []);
+
+  return (
+    <div className={cN('ast-container', { other: testLodash })}>
+      <AntdButton type='primary' onClick={() => setNum((v) => v + 1)}>
+        Button
+      </AntdButton>
+      <AntdEmpty />
+      <div>num: {num}</div>
+      <div>{testLodash ? 'yes' : 'no'}</div>
+      <div className='icons'>
+        <AccountingBillStackFilled />
+        <AccountingCoinsStackFilled />
+        <CashPaymentBag1Filled />
+        <DiscountFilled />
+      </div>
+    </div>
+  );
+};
+
+export default AST;
 ```
+
+
+</div>
 
 </div>
 <div flex="~ col gap-2">
 
-### Flat Config
+### After
 
-```ts {*|4-5|*|6-8|*}{at:1}
-import antfu from '@antfu/eslint-config'
+<div scale-85 mt--15>
 
-export default antfu({
-  vue: true,
-  typescript: true,
-  stylistic: {
-    indent: 4
-  }
-  // ...
-})
+```tsx {*|1-4|*}
+import { isNumber } from "lodash"
+import { useEffect,useState,useMemo } from "react";
+import { Button as AntdButton, Empty as AntdEmpty } from "antd";
+import { AccountingBillStackFilled,AccountingCoinsStackFilled,CashPaymentBag1Filled } from "@pietra/icons";
+
+const AST = () => {
+  const [num, setNum] = useState(0);
+  const testLodash = useMemo(() => isNumber(num), [num]);
+
+  useEffect(() => {
+    console.log('AST');
+  }, []);
+
+  return (
+    <div className={cN('ast-container', { other: testLodash })}>
+      <AntdButton type='primary' onClick={() => setNum((v) => v + 1)}>
+        Button
+      </AntdButton>
+      <AntdEmpty />
+      <div>num: {num}</div>
+      <div>{testLodash ? 'yes' : 'no'}</div>
+      <div className='icons'>
+        <AccountingBillStackFilled />
+        <AccountingCoinsStackFilled />
+        <CashPaymentBag1Filled />
+      </div>
+    </div>
+  );
+};
+
+export default AST;
 ```
 
-<div flex="~ col gap-2" mt-3>
-
-<div v-click class="slidev-vclick-target" :class="$clicks === 1 ? 'text-green' : ''">
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
-Shared configs can take user options.
-</div>
-
-<div v-click class="slidev-vclick-target" :class="$clicks === 2 ? 'text-green' : ''">
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
-One single config, adapts to all projects.
-</div>
-
-<div v-click class="slidev-vclick-target" :class="$clicks === 3 ? 'text-green' : ''" >
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
-  <span v-mark.green.delay400="5">
-    Minimal configures as Prettier.
-  </span>
-</div>
-
-<div v-click class="slidev-vclick-target">
-  <div i-ph-check-circle-duotone text-green inline-block translate-y-2px />
-  <span v-mark.green.delay400="5">
-    Powerful and customizable as ESLint.
-  </span>
-</div>
-
-</div>
 </div>
 
 </div>
 
-<!--
-Here we can do a quick comparison to show what I mean.
-
-[click] In the new flat config, a shared config can be a factory function that takes user options, which we couldn't do in the legacy config. Imagine if I want my config to work in both TypeScript and non-TypeScript projects, Vue and non-Vue projects, I will need to do a monorepo to publish configs for different combinations. As you can see, it doesn't scale well, we are doubling the amount of combinations for each option.
-
-[click] The flat config allows you to provide semantic options to toggle each feature dynamically. Making one single config able to adapt to different projects.
-
-[click] Because of that, we could also have high-level abstraction to absorb the underlying complexity, and provide a minimal configuration interface like Prettier, where end users don't even need to worry about the underlying details, [click] but still have all the control to do so when they really want to.
--->
+</div>
 
 ---
+glow: left
+---
 
-# Project-aware Configs
+<div w="40%">
 
-<div text-gray flex="~ items-center gap-1" v-click>
-Example: <div i-logos-nuxt-icon inline-block /> Nuxt ESLint
+## Pietra Icons <sup text-purple bg-purple:15 px1.5 rounded text-sm>@youhua</sup>
+
+<div mt-4 />
+
+<v-clicks>
+
+- 访问 https://creators-staging.pietrastudio.com/playground
+- 点击你想使用的icon
+- 到项目中粘贴
+- That's all, So easy!!!
+
+</v-clicks>
+<div mt-4 />
+
+<div v-click>
+
+```tsx
+<div className='icons'>
+  <AccountingBillStackFilled />
+  <AccountingCoinsStackFilled />
+  <CashPaymentBag1Filled />
+</div>
+```
 </div>
 
-<div grid="~ cols-2 gap-4" h="80%">
+</div>
+
+<iframe
+  src="https://creators-staging.pietrastudio.com/playground"
+  onload="this.style.visibility = 'visible';"
+  scale-60 origin-top-right absolute right-0 top-0 bottom-0 w="95%" h="167%"
+  border="l main"
+  style="filter:contrast(1.15);visibility:hidden;"
+/>
+
+<div v-show="false">
+</div>
+
+
+---
+class: grid grid-cols-[1fr_1fr] p0 h-full
+clicks: 1
+glow: left
+---
+
+<div p4 flex="~ col gap-1 items-center justify-center" transition duration-500 :class="$clicks >= 1 ? '' : 'translate-x-65'">
+
+<div mt-4 />
+
+<GitlabRepo name="@pietra-auto-tracker" repoLink="https://gitlab.com/pietrastudio/web/npm/-/tree/main/packages/pietra-auto-tracker?ref_type=heads" /> <span flex="~ inline gap-0.5 items-center" text-amber bg-amber:15 px1 rounded text-md></span>
+
+</div>
+
 <div
-  v-click="1"
-  flex="~ col gap-2 items-center justify-center"
-  transition duration-500
-  :class="$clicks < 2 ? 'scale-130 translate-x-55' : ''"
+  bg-hex-5552 p8 border="l main" transition duration-500
+  :class="$clicks >= 1 ? '' : 'translate-x-100%'"
 >
-  <img src="/nuxt-eslint.png" w-90 rounded-lg shadow border="~ main" />
-  <a href="https://eslint.nuxt.com" text-sm>eslint.nuxt.com</a>
-</div>
+<div scale-90 origin-left-top w-160 mb--100 mr--40>
 
-<div flex="~ col items-center justify-center" forward:delay-500 pb-10 v-click>
+# 导入
 
-```ts
-// Generated by Nuxt based on your project
-import withNuxt from './.nuxt/eslint.config.mjs'
+<div mt-2 />
 
-export default withNuxt(
-  // your custom config goes here
-)
+```bash
+yarn add @pietra-auto-tracker
 ```
 
+
+## 配置
+
+<div mt-2 />
+
+```js
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    ...
+    react(),
+    pietraAutoImport({
+      include: [/\.[tj]sx?$/],
+      dts: './pietra-auto-imports.d.ts',
+      eslintrc: './.eslintrc-pietra-auto-import.json',
+      presets: {
+        react: true,
+        lodash: true,
+        classnames: true,
+        reactRouter: false,
+        reactRouterDom: false,
+        pietraCompoent: false,
+        pietraIcons: true,
+        antd: { prefix: 'Antd' },
+      },
+    }),
+  ],
+  ...
+});
+```
 </div>
 </div>
-
-<!--
-Flat config also makes it possible for meta-frameworks to provide project-aware configs.
-
-[click] For example, in Nuxt, we have file-based routing, auto-imported components, server API directories, etc. Files under different folders or different names might have different purposes and different constraints.
-
-So in Nuxt we had the Nuxt ESLint module [click] that generates a sub ESLint config file based on the user's project setup. Where users can extend from and keep adding their custom rules.
-
-This is just one direction of the possibilities with flat config we are currently exploring, but we believe there would be many more interesting approaches coming from the community.
--->
-
----
-layout: fact
----
-
-# One for All{.important-text-3em}
-
-One config for all projects<br>
-One tool for _everything*_
-
-<!--
-To summarize today's topic, I'd like to say that ESLint makes it possible to be One for All in two aspects. That you can have one config for all projects, and then one tool for everything related to code checking and modifications.
--->
-
-
 
 ---
 layout: intro
@@ -1047,10 +1052,4 @@ glowX: 50
 glowY: 120
 ---
 
-# Thank you!
-
-Slides on [antfu.me](https://antfu.me)
-
-<!--
-That's all for my talk today. You can find the slides on my website antfu.me. Thank you so much!
--->
+# Thank you
