@@ -851,13 +851,10 @@ export default defineConfig({
 
 ---
 
-<div grid="~ cols-2 gap-8">
+## Before and After
 
-<div flex="~ col gap-2">
-
-### Before
-
-<div scale-90 mt--10>
+<div grid="~ cols-[1fr_max-content_1fr] gap-4">
+<div scale-85 ml--20 mt--10 v-click>
 
 ```tsx
 const AST = () => {
@@ -889,17 +886,11 @@ const AST = () => {
 export default AST;
 ```
 
-
 </div>
+<span i-carbon:arrow-right ma ml--10  v-click />
+<div scale-85 mt--10  ml--20  v-click>
 
-</div>
-<div flex="~ col gap-2">
-
-### After
-
-<div scale-85 mt--15>
-
-```tsx {*|1-4|*}
+```tsx {*|1-4|*}{at:4}
 import { isNumber } from "lodash"
 import { useEffect,useState,useMemo } from "react";
 import { Button as AntdButton, Empty as AntdEmpty } from "antd";
@@ -934,9 +925,6 @@ export default AST;
 ```
 
 </div>
-
-</div>
-
 </div>
 
 ---
@@ -1035,45 +1023,71 @@ export default defineConfig({
 
 ---
 
-# 使用
+## Before and After
+
+<div grid="~ cols-[1fr_max-content_1fr] gap-4">
+<div scale-85 ml--20 v-click>
 
 ```tsx
-...
-<div className='auto-tracker-container'>
-  <AntdSpace>
-    <AntdButton
-      data-log-common-type='AST_BUTTON'
-      data-log-common-content='not have onClick'
-      data-log-field1='filed1'
-      data-log-field2='filed2'
-    >
-      没有 onClick
-    </AntdButton>
+<AntdButton
+  data-log-common-type='AST_BUTTON'
+  data-log-common-content='not have onClick'
+  data-log-field1='filed1'
+  data-log-field2='filed2'
+>
+  没有 onClick
+</AntdButton>
 
-    <AntdButton
-      onClick={() => {
-        console.log('onClick');
-      }}
-      data-log-common-type='AST_BUTTON'
-      data-log-common-content='have onClick'
-      data-log-field1='filed1'
-      data-log-field2='filed2'
-    >
-      有 onClick
-    </AntdButton>
-
-    <AntdButton
-      onClick={onReport}
-      data-log-common-type={AST_BUTTON}
-      data-log-common-content={`AST_BUTTON_${num}`}
-      data-log-field1='filed1'
-      data-log-field2='filed2'
-    >
-      变量
-    </AntdButton>
-  </AntdSpace>
-</div>
+<AntdButton
+  onClick={() => {
+    console.log('onClick');
+  }}
+  data-log-common-type='AST_BUTTON'
+  data-log-common-content='have onClick'
+  data-log-field1='filed1'
+  data-log-field2='filed2'
+>
+  有 onClick
+</AntdButton>
 ```
+
+</div>
+<span i-carbon:arrow-right ma ml--5  v-click />
+<div scale-85  ml--5 mt--10 v-click>
+
+```tsx {*|2-11|15-26|*}{at:4}
+<AntdButton
+  onClick={() => {
+    const reportParams = {
+      commonType: 'AST_BUTTON',
+      commonContent: 'not have onClick',
+      field1: 'filed1',
+      field2: 'filed2',
+    };
+    sendReport(reportParams);
+  }}
+>
+  没有 onClick
+</AntdButton>
+
+<AntdButton
+  onClick={() => {
+    console.log('onClick');
+        const reportParams = {
+      commonType: 'AST_BUTTON',
+      commonContent: 'not have onClick',
+      field1: 'filed1',
+      field2: 'filed2',
+    };
+    sendReport(reportParams);
+  }}
+>
+  有 onClick
+</AntdButton>
+```
+
+</div>
+</div>
 
 ---
 layout: intro
