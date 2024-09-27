@@ -245,7 +245,7 @@ const a = 'Hello World';
 
 <v-clicks at="3" text-sm>
 
-- 深度优先，开始遍历 `tokens`
+- 开始遍历 `tokens`
 - const 关键字生成 `VariableDeclaration` 节点
 - a 标识符和赋值操作符 = 生成 `VariableDeclarator` 节点
 - 'Hello World' 字符串生成 `StringLiteral` 节点
