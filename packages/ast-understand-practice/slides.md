@@ -1089,8 +1089,67 @@ export default defineConfig({
 </div>
 </div>
 
+
 ---
-layout: intro
+
+# 伪代码
+
+<div scale-60 mt--40 shadow>
+
+```ts
+
+export default function addTrackerTocode(code: string) {
+  let reportCallFnImported = false;
+  const ast = parse(code, { sourceType: "module", plugins: ["jsx", "typescript"] });
+
+  traverse(ast, {
+    ImportDeclaration(path) {
+      // 检查是否已导入报告函数
+    },
+    JSXOpeningElement(path) {
+      if (找不到 LOG_PRARM_KEYS.commonType 属性) return;
+
+      const parent = 查找父级 JSX 元素;
+      if (parent) {
+        const onClickNode = 查找 onClick 属性;
+        const reportParams = 获得报告参数;
+        
+        const 生成变量声明 = 创建事件类型和报告参数变量声明;
+        const sendMoreCommonEventCall = 创建事件报告调用;
+
+        if (!onClickNode) {
+          // 创建新 onClick 处理函数
+          const newFunction = 创建新函数(变量声明, sendMoreCommonEventCall);
+          parent.node.openingElement.attributes.push(添加新的 onClick 属性);
+        } else {
+          // 修改现有的 onClick 处理逻辑
+          修改现有的 onClick 处理逻辑(变量声明, sendMoreCommonEventCall);
+        }
+      }
+    }
+  });
+
+  if (!reportCallFnImported) {
+    // 添加导入声明
+    ast.program.body.unshift(创建导入声明);
+  }
+
+  // 生成并返回修改后的代码
+  return generate(ast).code;
+}
+```
+
+</div>
+
+---
+layout: center
+class: text-center
+---
+
+<h1 important-text-4xl >学会AST，<span text-purple v-mark.underline.purple v-click>真的可以为所欲为！</span></h1>
+
+---
+layout: center
 class: text-center pb-5
 glowX: 50
 glowY: 120
